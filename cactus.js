@@ -3,7 +3,6 @@ io.set('origins', '*:*');
 var v = require('vec3');
 const mineflayer = require('mineflayer')
 const readline = require('readline');
-const Webhook = require("webhook-discord")
 const express = require('express')
 const fs = require("fs");
 const app = express()
@@ -37,7 +36,7 @@ accounts.forEach(function(account) {
                 host: config.ip,
                 port: config.port,
                 username: account.username,
-                version: "1.11.2",
+                version: "1.8.9",
                 password: account.password
             })
 
@@ -72,22 +71,46 @@ accounts.forEach(function(account) {
 
 
 
-    }, botnr * 5000);
+    }, botnr * 3000);
 
 
 });
 
 
+setInterval(function(){
+    bots.forEach(function(bot) {
+        bot.chat("/server skyblockice")
+    });
+}, 60000)
+
 
 setTimeout(function() {
     botnames["FePig"].on('message', (message) => {
-        console.log(message);
+        
+        //console.log(message);
+        
         io.emit('chatc', {
             "message": message.toAnsi(),
             "username": "FePig"
         });
+
+
+//console.log(message.json.extra.length)
+
+        //if (message.json.extra.length == 5) {
+      //      console.log(message.extra[3].text.split(" + "))
+      //  }
+
+
     });
+
+
+
+
 }, 12000);
+
+
+
 
 
 rl.on('line', (input) => {
@@ -97,10 +120,16 @@ rl.on('line', (input) => {
         });
 
     }
+         if (input == "act") {
+        bots.forEach(function(bot) {
+            bot.activateBlock(bot.blockAt(bot.entity.position.offset(0, -1, 0)));
+        });
+
+    }
 
     if (input == "join") {
         bots.forEach(function(bot) {
-            bot.chat("/play factions");
+            bot.chat("/server skyblockice");
         });
     }
 
@@ -108,18 +137,18 @@ rl.on('line', (input) => {
 });
 
 
-function checkraid() {
-    try {
-        if (Pig.blockAt(v(9902, 11, 9851)).name != "cobblestone") {
-            console.log("weawoo");
-            Hook.err("Pizza", "I like pizza, do you?")
-        }
-    } catch (error) {
-        console.log("[err] " + error);
-    }
+// function checkraid() {
+//     try {
+//         if (Pig.blockAt(v(9902, 11, 9851)).name != "cobblestone") {
+//             console.log("weawoo");
+//             Hook.err("Pizza", "I like pizza, do you?")
+//         }
+//     } catch (error) {
+//         console.log("[err] " + error);
+//     }
 
 
-}
+// }
 
 function initwebsocket() {
     console.log("initting websockets")
@@ -205,3 +234,4 @@ function initwebsocket() {
 }
 initwebsocket()
 app.listen(port, () => console.log(`Api server listening on port ${port}!`))
+
